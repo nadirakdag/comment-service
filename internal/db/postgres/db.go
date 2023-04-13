@@ -4,6 +4,9 @@ import (
 	"comment-service/config"
 	"context"
 	"fmt"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
@@ -25,4 +28,27 @@ func NewDatabase(config config.Database) (*Database, error) {
 
 func (d *Database) Ping(ctx context.Context) error {
 	return d.Client.PingContext(ctx)
+}
+
+func (d *Database) MigrateDB() error {
+	fmt.Println("migrating our database")
+
+	driver, err := postgres.WithInstance(d.Client.DB, &postgres.Config{})
+	if err != nil {
+		return fmt.Errorf("could not create the postgres driver: %v", err)
+	}
+
+	m, err := migrate.NewWithDatabaseInstance("file://internal/db/postgres/migrations", "postgres", driver)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	if err := m.Up(); err != nil {
+		return fmt.Errorf("could not run up migrations: %v", err)
+	}
+
+	fmt.Println("successfully migrated the database")
+
+	return nil
 }

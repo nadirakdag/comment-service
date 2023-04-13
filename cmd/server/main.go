@@ -3,7 +3,6 @@ package main
 import (
 	"comment-service/config"
 	"comment-service/internal/db/postgres"
-	"context"
 	"fmt"
 	"github.com/kelseyhightower/envconfig"
 )
@@ -24,7 +23,8 @@ func Run() error {
 		return err
 	}
 
-	if err := db.Ping(context.Background()); err != nil {
+	if err := db.MigrateDB(); err != nil {
+		fmt.Println(err)
 		return err
 	}
 
