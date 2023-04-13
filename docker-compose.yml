@@ -19,13 +19,13 @@ services:
     build: .
     container_name: "comment-rest-api"
     environment:
-      - DATABASE_USERNAME="postgres"
-      - DATABASE_PASSWORD="postgres"
-      - DATABASE_DATABASE="postgres"
-      - DATABASE_HOST="127.0.0.1"
-      - DATABASE_TABLE="postgres"
-      - DATABASE_PORT=5432
-      - DATABASE_SSL_MODE="disable"
+      DATABASE_USERNAME: "postgres"
+      DATABASE_PASSWORD: "postgres"
+      DATABASE_DATABASE: "postgres"
+      DATABASE_HOST: "db"
+      DATABASE_TABLE: "postgres"
+      DATABASE_PORT: 5432
+      DATABASE_SSL_MODE: "disable"
     ports:
       - "8080:8080"
     depends_on:
