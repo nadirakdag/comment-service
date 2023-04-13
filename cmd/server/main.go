@@ -2,6 +2,8 @@ package main
 
 import (
 	"comment-service/config"
+	"comment-service/internal/db/postgres"
+	"context"
 	"fmt"
 	"github.com/kelseyhightower/envconfig"
 )
@@ -16,19 +18,29 @@ func Run() error {
 
 	initConfig()
 
+	db, err := postgres.NewDatabase(cfg.Database)
+	if err != nil {
+		fmt.Printf("failed to connect to the database, err: %v \n", err)
+		return err
+	}
+
+	if err := db.Ping(context.Background()); err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func initConfig() {
 	err := envconfig.Process("", &cfg)
 	if err != nil {
-		fmt.Errorf(err.Error())
+		fmt.Println(err.Error())
 	}
 }
 
 func main() {
 	fmt.Println("Go REST API Course")
 	if err := Run(); err != nil {
-		fmt.Errorf("error whil starting application, err : %v", err)
+		fmt.Printf("error while starting application, err : %v \n", err)
 	}
 }

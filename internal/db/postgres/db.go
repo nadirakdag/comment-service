@@ -13,7 +13,7 @@ type Database struct {
 }
 
 func NewDatabase(config config.Database) (*Database, error) {
-	connectionString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=%v", config.Host, config.Port, config.Username, config.Database, config.Password, config.SslMode)
+	connectionString := fmt.Sprintf("host=%s port=%v user=%s dbname=%s password=%s sslmode=%s", config.Host, config.Port, config.Username, config.Database, config.Password, config.SslMode)
 
 	dbConnection, err := sqlx.Connect("postgres", connectionString)
 	if err != nil {

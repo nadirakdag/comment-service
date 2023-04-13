@@ -30,7 +30,7 @@ func (s *Service) GetComment(context context.Context, id string) (Comment, error
 
 	cmt, err := s.Store.GetComment(context, id)
 	if err != nil {
-		fmt.Errorf("error while retrieving comment, err: %v", err)
+		fmt.Printf("error while retrieving comment, err: %v \n", err)
 		return Comment{}, ErrFetchingComment
 	}
 
