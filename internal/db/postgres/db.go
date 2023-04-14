@@ -3,6 +3,7 @@ package postgres
 import (
 	"comment-service/config"
 	"context"
+	"errors"
 	"fmt"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -44,7 +45,7 @@ func (d *Database) MigrateDB() error {
 		return err
 	}
 
-	if err := m.Up(); err != nil {
+	if err := m.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
 		return fmt.Errorf("could not run up migrations: %v", err)
 	}
 

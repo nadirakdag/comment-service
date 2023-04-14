@@ -46,5 +46,12 @@ func (s *Service) DeleteComment(ctx context.Context, id string) error {
 }
 
 func (s *Service) CreateComment(ctx context.Context, cmt Comment) (Comment, error) {
-	return Comment{}, ErrNotImplemented
+	fmt.Println("creating comment")
+
+	insertedComment, err := s.Store.CreateComment(ctx, cmt)
+	if err != nil {
+		return Comment{}, err
+	}
+
+	return insertedComment, nil
 }
