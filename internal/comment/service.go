@@ -37,12 +37,19 @@ func (s *Service) GetComment(context context.Context, id string) (Comment, error
 	return cmt, nil
 }
 
-func (s *Service) UpdateComment(ctx context.Context, cmt Comment) error {
-	return ErrNotImplemented
+func (s *Service) UpdateComment(ctx context.Context, id string, cmt Comment) (Comment, error) {
+	fmt.Println("updating comment")
+
+	updatedComment, err := s.Store.UpdateComment(ctx, id, cmt)
+	if err != nil {
+		return Comment{}, err
+	}
+
+	return updatedComment, nil
 }
 
 func (s *Service) DeleteComment(ctx context.Context, id string) error {
-	return ErrNotImplemented
+	return s.Store.DeleteComment(ctx, id)
 }
 
 func (s *Service) CreateComment(ctx context.Context, cmt Comment) (Comment, error) {

@@ -57,3 +57,33 @@ func (d *Database) CreateComment(ctx context.Context, cmt comment.Comment) (comm
 
 	return cmt, nil
 }
+
+func (d *Database) DeleteComment(ctx context.Context, id string) error {
+
+	_, err := d.Client.ExecContext(ctx, `DELETE FROM comments WHERE id = $1`, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (d *Database) UpdateComment(ctx context.Context, id string, cmt comment.Comment) (comment.Comment, error) {
+
+	var row = CommentRow{
+		Id:     id,
+		Slug:   sql.NullString{String: cmt.Slug, Valid: true},
+		Body:   sql.NullString{String: cmt.Body, Valid: true},
+		Author: sql.NullString{String: cmt.Author, Valid: true},
+	}
+	updatedRow, err := d.Client.NamedQueryContext(ctx, `UPDATE comments SET slug = :slug, author = :author, body = :body WHERE id = :id`, row)
+	if err != nil {
+		return comment.Comment{}, err
+	}
+
+	if err := updatedRow.Close(); err != nil {
+		return comment.Comment{}, err
+	}
+
+	return cmt, nil
+}
