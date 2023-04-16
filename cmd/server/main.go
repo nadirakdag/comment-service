@@ -2,8 +2,11 @@ package main
 
 import (
 	"comment-service/config"
+	"comment-service/internal/comment"
 	"comment-service/internal/db/postgres"
+	transportHttp "comment-service/internal/transport/http"
 	"fmt"
+
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -25,6 +28,13 @@ func Run() error {
 
 	if err := db.MigrateDB(); err != nil {
 		fmt.Println(err)
+		return err
+	}
+
+	commentService := comment.NewService(db)
+
+	httpHandler := transportHttp.NewHandler(commentService)
+	if err := httpHandler.Serve(); err != nil {
 		return err
 	}
 
