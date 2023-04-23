@@ -11,6 +11,13 @@ var (
 	ErrNotImplemented  = errors.New("not implemented")
 )
 
+type CommentService interface {
+	GetComment(context.Context, string) (Comment, error)
+	UpdateComment(context.Context, string, Comment) (Comment, error)
+	DeleteComment(context.Context, string) error
+	CreateComment(context.Context, Comment) (Comment, error)
+}
+
 // Service - is the struct on which all our
 // logic will be built on top of
 type Service struct {
